@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👾 SphinxDRM</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap"
+    rel="stylesheet">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    :root {
+      font-family: "Montserrat";
+    }
+
+    .transition-bg {
+      transition: background-color 0.3s ease;
+    }
+  </style>
+</head>
+
+<body class="bg-zinc-50 h-screen">
+  <audio id="arabfunny" src="https://www.myinstants.com/media/sounds/arab-funny.mp3"></audio>
+
+  <div class="flex justify-center items-center h-full">
+    <div class="bg-zinc-100 p-6 center w-[25em] shadow-lg h-auto rounded-lg"> <!--border border-gray-800-->
+      <div class="flex gap-2">
+        <p class="font-bold text-zinc-700 text-2xl underline underline-offset-4 decoration-dashed">SphinxDRM</p><a id="monster" class="cursor-pointer">👾</a>
+      </div>
+      <p class="text-grey font-medium text-zinc-500 text-base">coded by <a class="font-bold text-violet-700"
+          href="https://github.com/smokingplaya">smokingplaya</a></p>
+      <form class="mt-6" id="sendForm">
+        <h1
+          class="mb-5 font-bold text-zinc-700 text-xl underline decoration-wavy underline-offset-4 decoration-violet-700">
+          Добавление продукта</h1>
+        <input
+          class="w-full pl-4 h-[3em] rounded bg-zinc-100 text-zinc-900 font-medium mb-3 outline outline-2 outline-violet-400"
+          name="macAddress" type="text" placeholder="MAC-адрес">
+        <input
+          class="w-full pl-4 h-[3em] rounded bg-zinc-100 text-zinc-900 font-medium mb-3 outline outline-2 outline-violet-400"
+          name="productName" type="text" placeholder="Название продукта">
+        <input
+          class="w-full pl-4 h-[3em] rounded bg-zinc-100 text-zinc-900 font-medium mb-6 outline outline-2 outline-violet-400"
+          name="token" type="text" placeholder="Токен авторизации">
+
+        <button type="submit"
+          class="w-full pl-4 h-[3em] rounded bg-zinc-100 text-zinc-900 font-semibold outline outline-2 outline-violet-400 hover:bg-zinc-200 transition-bg">Отправить</button>
+
+        <!-- <div class="w-full p-2 pl-3 h-auto bg-red-500 outline outline-2 outline-red-600 rounded-lg mt-4">
+          <p class="font-bold text-lg text-zinc-50">Ошибка</p>
+          <p class="font-medium text-sm text-zinc-800">{message.error}</p>
+        </div> -->
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const errorDisplayTime = 3; // in secs
+    const form = document.getElementById("sendForm");
+    let errorTimeout;
+
+    function error(text) {
+      if (errorTimeout)
+        clearTimeout(errorTimeout);
+
+      let errBox = document.getElementById("errBox");
+
+      if (errBox)
+        errBox.remove();
+
+      errBox = document.createElement("div");
+      errBox.id = "errBox";
+      errBox.classList.add("w-full", "p-3", "pl-4", "h-auto", "bg-red-500", "outline", "outline-2", "outline-red-600", "rounded-lg", "mt-4");
+
+      let title = document.createElement("p");
+      title.innerText = "Ошибка!";
+      title.classList.add("font-bold", "text-lg", "text-zinc-50");
+      errBox.append(title);
+
+      let subtitle = document.createElement("p");
+      subtitle.innerText = text;
+      subtitle.classList.add("font-medium", "text-sm", "text-zinc-800");
+      errBox.append(subtitle);
+
+      form.append(errBox);
+
+      errorTimeout = setTimeout(() => {
+        errBox.remove();
+      }, errorDisplayTime * 1000);
+
+      return false;
+    }
+
+    document.getElementById("monster").addEventListener("click", e => {
+      e.preventDefault;
+      document.getElementById("arabfunny").play();
+    })
+
+    form.addEventListener("submit", async e => {
+      e.preventDefault();
+      let data = {};
+      let form = e.target;
+      let formData = new FormData(form);
+
+      for (let pair of formData.entries()) {
+        let [field, value] = pair;
+
+        if (value.length === 0)
+          return error(`Поле "${field}" пустое!`);
+
+        data[field] = value;
+      }
+
+      try {
+        let response = await fetch("add", {
+          method: "put",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify(data)
+        });
+
+        let [statusText, status] = [response.statusText, response.status];
+        let json = {};
+
+        console.log(status);
+
+        if (!response.ok)
+          return error(json.message || `Неизвестная ошибка (${status} - ${statusText}).`);
+      } catch (err) {
+        error(err.message)
+      }
+
+      //formData.forEach((v, k) => {
+      //  let str = v.toString();
+      //  if (str.length === 0) {
+      //    error(`Поле ${k} пустое!`)
+      //    return false;
+      //  }
+      //});
+    })
+  </script>
+</body>
+
+</html>
