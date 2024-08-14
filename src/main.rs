@@ -1,5 +1,6 @@
 use actix_cors::Cors;
 use actix_web::{http::header, App, HttpServer};
+use std::env;
 
 mod service;
 mod redis;
@@ -12,6 +13,10 @@ extern crate env_logger;
 async fn main() -> std::io::Result<()> {
   dotenv::init();
   env_logger::init();
+
+  let port = env::var("WEBSERVER_PORT")
+    .unwrap_or("8080".to_string())
+    .parse::<u16>().unwrap_or(8080);
 
   HttpServer::new(||
       App::new()
@@ -28,7 +33,7 @@ async fn main() -> std::io::Result<()> {
             .max_age(3600)
       )
     )
-    .bind(("0.0.0.0", 8080))?
+    .bind(("0.0.0.0", port))?
     .run()
     .await
 }

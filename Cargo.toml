@@ -1,8 +1,8 @@
 [package]
 name = "sphinx_drm"
 authors = ["smokingplaya"]
-description = "DRM System, that will used to ..."
-version = "0.1.0"
+description = "DRM system to protect my projects"
+version = "0.1.4"
 edition = "2021"
 
 [dependencies]
