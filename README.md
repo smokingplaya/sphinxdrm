@@ -11,10 +11,15 @@ with the mac-adress of the device on which the product should run. HTTPS cannot 
 so it will be impossible/difficult to bypass this drm.\
 If HTTPS request returns code 200 - then the project is started, if not - then the process dies.
 
-# Usage
+# Building
 ```sh
 sudo apt install git
 git clone https://github.com/smokingplaya/sphinxdrm
 sudo docker build -t sphinx_drm .
 sudo docker compose up
 ```
+
+# Features
+get ``/sphinx``: Returns json information about Sphinx DRM\
+get ``/sphinx/add``: Returns HTML page, where you can add a product to the mac address\
+put ``/sphinx/add`` Adds mac address and product to database
