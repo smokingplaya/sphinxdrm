@@ -35,4 +35,4 @@ services:
     image: sphinx_drm:latest
     container_name: webserver
     ports:
-      - "8080:8080"
+      - "3030:3030"
